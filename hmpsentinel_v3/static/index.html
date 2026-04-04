@@ -1,0 +1,179 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HMPSentinel - Hazard Mitigation Plan Stress-Test</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <h1>🛡️ HMPSentinel</h1>
+                <p>Hazard Mitigation Plan Stress-Test Engine</p>
+            </div>
+            <div class="tagline">Operational Rigor for County Directors</div>
+        </header>
+
+        <main>
+            <section class="upload-section">
+                <h2>Upload Hazard Mitigation Plan</h2>
+                <form id="uploadForm" enctype="multipart/form-data">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="county">County Name</label>
+                            <input type="text" id="county" name="county" placeholder="e.g., Guilford County" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="state">State</label>
+                            <select id="state" name="state" required>
+                                <option value="">Select State</option>
+                                <option value="AL">Alabama</option>
+                                <option value="NC">North Carolina</option>
+                                <option value="SC">South Carolina</option>
+                                <option value="VA">Virginia</option>
+                                <option value="GA">Georgia</option>
+                                <option value="FL">Florida</option>
+                                <option value="TX">Texas</option>
+                                <option value="CA">California</option>
+                                <option value="NY">New York</option>
+                                <option value="PA">Pennsylvania</option>
+                                <option value="OH">Ohio</option>
+                                <option value="MI">Michigan</option>
+                                <option value="IL">Illinois</option>
+                                <option value="WA">Washington</option>
+                                <option value="OR">Oregon</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="plan_title">Plan Title</label>
+                            <input type="text" id="plan_title" name="plan_title" placeholder="e.g., Hazard Mitigation Plan" value="Hazard Mitigation Plan">
+                        </div>
+                        <div class="form-group">
+                            <label for="plan_year">Plan Year</label>
+                            <input type="number" id="plan_year" name="plan_year" placeholder="e.g., 2014" min="1990" max="2030">
+                        </div>
+                        <div class="form-group">
+                            <label for="plan_type">Plan Type</label>
+                            <select id="plan_type" name="plan_type">
+                                <option value="Single Jurisdiction">Single Jurisdiction</option>
+                                <option value="Multi-jurisdictional" selected>Multi-jurisdictional</option>
+                            </select>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="file">Upload PDF Plan</label>
+                            <input type="file" id="file" name="file" accept=".pdf" required>
+                            <p class="help-text">Maximum file size: 50MB</p>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-primary" id="analyzeBtn">
+                        <span class="btn-text">🔍 Analyze Plan</span>
+                        <span class="btn-loading" style="display:none;">Analyzing...</span>
+                    </button>
+                </form>
+            </section>
+
+            <div id="results" class="results-section" style="display:none;">
+                <!-- Metadata Section -->
+                <section class="result-card metadata-card">
+                    <div class="card-header">
+                        <h3>📋 County Identity</h3>
+                        <span class="badge" id="dataFreshness"></span>
+                    </div>
+                    <div class="card-content" id="countyIdentity"></div>
+                </section>
+
+                <!-- FEMA Readiness -->
+                <section class="result-card readiness-card" id="femaReadinessSection">
+                    <div class="card-header">
+                        <h3>🎯 FEMA Submission Readiness</h3>
+                    </div>
+                    <div class="readiness-status" id="femaReadinessStatus"></div>
+                    <div class="card-content" id="femaReadinessContent"></div>
+                </section>
+
+                <!-- CFR Compliance -->
+                <section class="result-card">
+                    <div class="card-header">
+                        <h3>📊 CFR 201.6 Compliance Analysis</h3>
+                        <span class="score-badge" id="cfrScore"></span>
+                    </div>
+                    <div class="card-content" id="cfrCompliance"></div>
+                </section>
+
+                <!-- BRIC Readiness -->
+                <section class="result-card">
+                    <div class="card-header">
+                        <h3>💰 BRIC Competitiveness</h3>
+                        <span class="score-badge" id="bricScore"></span>
+                    </div>
+                    <div class="card-content" id="bricAnalysis"></div>
+                </section>
+
+                <!-- Equity & Justice -->
+                <section class="result-card">
+                    <div class="card-header">
+                        <h3>⚖️ Equity & Justice40</h3>
+                        <span class="score-badge" id="equityScore"></span>
+                    </div>
+                    <div class="card-content" id="equityAnalysis"></div>
+                </section>
+
+                <!-- Climate Foresight -->
+                <section class="result-card">
+                    <div class="card-header">
+                        <h3>🌡️ Climate Foresight</h3>
+                        <span class="score-badge" id="climateScore"></span>
+                    </div>
+                    <div class="card-content" id="climateAnalysis"></div>
+                </section>
+
+                <!-- Risk Quantification -->
+                <section class="result-card">
+                    <div class="card-header">
+                        <h3>📈 Risk Quantification</h3>
+                        <span class="score-badge" id="riskScore"></span>
+                    </div>
+                    <div class="card-content" id="riskAnalysis"></div>
+                </section>
+
+                <!-- Priority Findings -->
+                <section class="result-card findings-card">
+                    <div class="card-header">
+                        <h3>🚨 Priority Findings</h3>
+                        <span class="badge" id="findingsCount"></span>
+                    </div>
+                    <div class="findings-list" id="priorityFindings"></div>
+                </section>
+
+                <!-- Recommendations -->
+                <section class="result-card recommendations-card">
+                    <div class="card-header">
+                        <h3>📝 Action Recommendations</h3>
+                    </div>
+                    <div class="card-content" id="recommendations"></div>
+                </section>
+
+                <!-- Export Button -->
+                <div class="export-section">
+                    <button class="btn-secondary" onclick="exportResults()">📥 Export JSON Report</button>
+                </div>
+            </div>
+
+            <div id="error" class="error-section" style="display:none;">
+                <h3>❌ Error</h3>
+                <p id="errorMessage"></p>
+            </div>
+        </main>
+
+        <footer>
+            <p>HMPSentinel v2.0 | Operational Hazard Mitigation Plan Analysis</p>
+            <p class="disclaimer">This tool provides directional assessment, not formal FEMA determination.</p>
+        </footer>
+    </div>
+
+    <script src="/script.js"></script>
+</body>
+</html>
